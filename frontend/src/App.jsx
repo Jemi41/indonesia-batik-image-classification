@@ -132,102 +132,109 @@ function App() {
 const styles = {
   container: { 
     display: 'flex', 
+    flexDirection: window.innerWidth < 768 ? 'column' : 'row', // Stack on mobile
     width: '100vw', 
-    height: '100vh', 
+    minHeight: '100vh', 
     backgroundColor: '#0b0e11', 
     color: '#fff', 
     fontFamily: 'Segoe UI, Arial',
-    overflow: 'hidden',
     margin: 0,
     padding: 0,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    overflowX: 'hidden'
   },
   sidebar: { 
-    width: '300px', 
-    minWidth: '300px',
+    width: window.innerWidth < 768 ? '100%' : '300px', 
+    height: window.innerWidth < 768 ? '200px' : 'auto', // Shorter on mobile
     backgroundColor: '#161b22', 
-    borderRight: '1px solid #30363d', 
+    borderRight: window.innerWidth < 768 ? 'none' : '1px solid #30363d', 
+    borderBottom: window.innerWidth < 768 ? '1px solid #30363d' : 'none',
     display: 'flex', 
     flexDirection: 'column' 
   },
-  sidebarTitle: { padding: '20px', fontSize: '1.2rem', borderBottom: '1px solid #30363d', margin: 0 },
-  historyList: { flex: 1, padding: '15px', overflowY: 'auto' },
-  historyCard: { display: 'flex', gap: '10px', alignItems: 'center', backgroundColor: '#0d1117', padding: '10px', borderRadius: '8px', marginBottom: '12px', border: '1px solid #21262d' },
-  historyThumb: { width: '50px', height: '50px', borderRadius: '4px', objectFit: 'cover' },
-  miniGauge: { width: '40px', height: '4px', backgroundColor: '#333', borderRadius: '2px' },
+  sidebarTitle: { padding: '15px 20px', fontSize: '1rem', borderBottom: '1px solid #30363d', margin: 0 },
+  historyList: { 
+    flex: 1, 
+    padding: '10px', 
+    overflowY: 'auto', 
+    display: window.innerWidth < 768 ? 'flex' : 'block', // Horizontal scroll on mobile
+    gap: '10px'
+  },
+  historyCard: { 
+    display: 'flex', 
+    gap: '10px', 
+    alignItems: 'center', 
+    backgroundColor: '#0d1117', 
+    padding: '8px', 
+    borderRadius: '8px', 
+    marginBottom: window.innerWidth < 768 ? '0' : '12px',
+    minWidth: window.innerWidth < 768 ? '180px' : 'auto',
+    border: '1px solid #21262d' 
+  },
+  historyThumb: { width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' },
+  miniGauge: { width: '30px', height: '3px', backgroundColor: '#333', borderRadius: '2px' },
   miniFill: { height: '100%', backgroundColor: '#27ae60', borderRadius: '2px' },
-  systemStatus: { padding: '15px', borderTop: '1px solid #30363d', fontSize: '0.75rem', display: 'flex', gap: '8px', alignItems: 'center', color: '#27ae60' },
-  statusDot: { width: '8px', height: '8px', backgroundColor: '#27ae60', borderRadius: '50%', boxShadow: '0 0 5px #27ae60' },
+  systemStatus: { padding: '10px', borderTop: '1px solid #30363d', fontSize: '0.7rem', display: 'flex', gap: '8px', alignItems: 'center', color: '#27ae60' },
+  statusDot: { width: '6px', height: '6px', backgroundColor: '#27ae60', borderRadius: '50%', boxShadow: '0 0 5px #27ae60' },
+  
   mainContent: { 
     flex: 1, 
     display: 'flex', 
     flexDirection: 'column', 
     alignItems: 'center', 
-    padding: '30px', 
-    position: 'relative',
+    padding: window.innerWidth < 768 ? '20px' : '30px', 
     backgroundColor: '#0d1117'
   },
-  mainTitle: { fontSize: '2.2rem', letterSpacing: '2px', fontWeight: '300', marginTop: '10px' },
+  mainTitle: { fontSize: window.innerWidth < 768 ? '1.5rem' : '2.2rem', letterSpacing: '2px', fontWeight: '300', marginTop: '10px' },
   visionFrame: { 
-    width: '90%', 
+    width: '100%', 
     maxWidth: '800px', 
-    height: '500px', 
+    height: window.innerWidth < 768 ? '250px' : '500px', 
     border: '1px solid #3498db', 
     borderRadius: '12px', 
     marginTop: '20px', 
     backgroundColor: '#000', 
     overflow: 'hidden', 
-    position: 'relative',
-    boxShadow: '0 0 20px rgba(52, 152, 219, 0.2)'
+    position: 'relative'
   },
-  uploadLabel: { width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', color: '#555' },
-  uploadIcon: { fontSize: '3rem', marginBottom: '10px' },
-  previewContainer: { width: '100%', height: '100%', position: 'relative' },
-  activeImage: { width: '100%', height: '100%', objectFit: 'cover' },
-  neuralOverlay: { 
-    position: 'absolute', 
-    top: 0, 
-    left: 0, 
-    width: '100%', 
-    height: '100%', 
-    background: 'linear-gradient(to bottom, transparent 60%, rgba(52,152,219,0.3) 100%)',
-    pointerEvents: 'none',
-    zIndex: '1'
-  },
+  activeImage: { width: '100%', height: '100%', objectFit: 'contain' }, // Contain for mobile
   scanStatusLine: { 
     position: 'absolute', 
     bottom: '0', 
-    left: '0',
     width: '100%', 
-    padding: '12px 0', 
-    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Improved visibility
+    padding: '8px 0', 
+    backgroundColor: 'rgba(0, 0, 0, 0.8)', 
     textAlign: 'center', 
-    fontSize: '0.9rem', 
+    fontSize: '0.7rem', 
     color: '#3498db', 
-    fontWeight: 'bold',
-    letterSpacing: '1px',
-    borderTop: '2px solid #3498db',
-    zIndex: '2',
-    textTransform: 'uppercase'
+    borderTop: '1px solid #3498db',
+    zIndex: '2'
   },
-  closeBtn: { position: 'absolute', top: '10px', right: '10px', backgroundColor: '#e74c3c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', padding: '2px 8px', zIndex: 10 },
-  scanBtn: { marginTop: '30px', padding: '15px 80px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '1.1rem', letterSpacing: '2px', fontWeight: 'bold' },
-  footerInfo: { marginTop: 'auto', padding: '20px' },
-  engineBadge: { border: '1px solid #27ae60', color: '#27ae60', padding: '5px 15px', borderRadius: '20px', fontSize: '0.7rem' },
+  scanBtn: { 
+    marginTop: '20px', 
+    width: window.innerWidth < 768 ? '90%' : 'auto',
+    padding: '12px 60px', 
+    backgroundColor: '#3498db', 
+    color: 'white', 
+    border: 'none', 
+    borderRadius: '4px', 
+    cursor: 'pointer', 
+    fontSize: '1rem', 
+    fontWeight: 'bold' 
+  },
+  
   resultPanel: { 
-    width: '380px', 
-    minWidth: '380px',
+    width: window.innerWidth < 768 ? '100%' : '380px', 
     backgroundColor: '#161b22', 
-    borderLeft: '1px solid #30363d', 
-    padding: '30px',
+    borderLeft: window.innerWidth < 768 ? 'none' : '1px solid #30363d', 
+    borderTop: window.innerWidth < 768 ? '1px solid #30363d' : 'none',
+    padding: '20px',
     display: 'flex',
     flexDirection: 'column'
   },
-  panelHeader: { fontSize: '1.2rem', marginBottom: '40px', fontWeight: 'bold' },
-  gaugeContainer: { display: 'flex', justifyContent: 'center', marginBottom: '40px' },
-  insightBox: { backgroundColor: '#0d1117', padding: '20px', borderRadius: '12px', border: '1px solid #30363d' },
-  infoBits: { marginTop: '20px' },
-  bit: { fontSize: '0.8rem', color: '#888', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }
+  panelHeader: { fontSize: '1.1rem', marginBottom: '20px', fontWeight: 'bold' },
+  gaugeContainer: { display: 'flex', justifyContent: 'center', marginBottom: '20px' },
+  insightBox: { backgroundColor: '#0d1117', padding: '15px', borderRadius: '12px', border: '1px solid #30363d' }
 };
 
 export default App;
