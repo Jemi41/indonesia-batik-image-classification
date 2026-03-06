@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://Jemi41.github.io/pilot", 
+  "homepage": "https://Jemi41.github.io/indonesia-batik-image-classification", 
   "scripts": {
     "dev": "vite",
     "build": "vite build",
