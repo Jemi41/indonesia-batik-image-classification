@@ -24,7 +24,7 @@ function App() {
     formData.append('file', file);
 
     try {
-      const res = await axios.post('http://127.0.0.1:8080/predict', formData);
+      const res = await axios.post('http://192.168.100.117:8080/predict', formData);
       const data = res.data;
       setResult(data);
       setHistory(prev => [{ 
