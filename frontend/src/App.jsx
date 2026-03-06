@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 function App() {
+  const [isHovered, setIsHovered] = useState(false); // Added for interactivity
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState(null);
@@ -70,10 +71,18 @@ function App() {
         
         <div style={styles.visionFrame}>
           {!preview ? (
-            <label style={styles.uploadLabel}>
+            <label 
+              style={{
+                ...styles.uploadLabel, 
+                backgroundColor: isHovered ? '#161b22' : '#000', // Subtly lightens on hover
+                borderColor: isHovered ? '#3498db' : 'transparent' // Shows border on hover
+              }}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
               <input type="file" onChange={onFileChange} style={{ display: 'none' }} />
               <div style={styles.uploadIcon}>+</div>
-              Click to Upload Batik Image
+              <div style={styles.uploadText}>Click to Upload Batik Image</div>
             </label>
           ) : (
             <div style={styles.previewContainer}>
@@ -132,7 +141,7 @@ function App() {
 const styles = {
   container: { 
     display: 'flex', 
-    flexDirection: window.innerWidth < 768 ? 'column' : 'row', // Stack on mobile
+    flexDirection: window.innerWidth < 768 ? 'column' : 'row', 
     width: '100vw', 
     minHeight: '100vh', 
     backgroundColor: '#0b0e11', 
@@ -145,7 +154,7 @@ const styles = {
   },
   sidebar: { 
     width: window.innerWidth < 768 ? '100%' : '300px', 
-    height: window.innerWidth < 768 ? '200px' : 'auto', // Shorter on mobile
+    height: window.innerWidth < 768 ? '200px' : 'auto', 
     backgroundColor: '#161b22', 
     borderRight: window.innerWidth < 768 ? 'none' : '1px solid #30363d', 
     borderBottom: window.innerWidth < 768 ? '1px solid #30363d' : 'none',
@@ -157,7 +166,7 @@ const styles = {
     flex: 1, 
     padding: '10px', 
     overflowY: 'auto', 
-    display: window.innerWidth < 768 ? 'flex' : 'block', // Horizontal scroll on mobile
+    display: window.innerWidth < 768 ? 'flex' : 'block', 
     gap: '10px'
   },
   historyCard: { 
@@ -197,44 +206,34 @@ const styles = {
     overflow: 'hidden', 
     position: 'relative'
   },
-  activeImage: { width: '100%', height: '100%', objectFit: 'contain' }, // Contain for mobile
-  scanStatusLine: { 
-    position: 'absolute', 
-    bottom: '0', 
+  uploadLabel: { 
     width: '100%', 
-    padding: '8px 0', 
-    backgroundColor: 'rgba(0, 0, 0, 0.8)', 
-    textAlign: 'center', 
-    fontSize: '0.7rem', 
-    color: '#3498db', 
-    borderTop: '1px solid #3498db',
-    zIndex: '2'
-  },
-  scanBtn: { 
-    marginTop: '20px', 
-    width: window.innerWidth < 768 ? '90%' : 'auto',
-    padding: '12px 60px', 
-    backgroundColor: '#3498db', 
-    color: 'white', 
-    border: 'none', 
-    borderRadius: '4px', 
+    height: '100%', 
+    display: 'flex', 
+    flexDirection: 'column', 
+    justifyContent: 'center', // Fix: Centering horizontally
+    alignItems: 'center',     // Fix: Centering vertically
     cursor: 'pointer', 
-    fontSize: '1rem', 
-    fontWeight: 'bold' 
+    transition: 'all 0.3s ease',
+    border: '2px dashed transparent'
   },
+  uploadIcon: { fontSize: '4rem', color: '#3498db', marginBottom: '10px' },
+  uploadText: { fontSize: '1.1rem', color: '#888', letterSpacing: '1px' },
+  previewContainer: { width: '100%', height: '100%', position: 'relative' },
+  activeImage: { width: '100%', height: '100%', objectFit: 'contain' },
+  neuralOverlay: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, transparent 60%, rgba(52,152,219,0.3) 100%)', pointerEvents: 'none', zIndex: '1' },
+  scanStatusLine: { position: 'absolute', bottom: '0', width: '100%', padding: '8px 0', backgroundColor: 'rgba(0, 0, 0, 0.8)', textAlign: 'center', fontSize: '0.7rem', color: '#3498db', borderTop: '1px solid #3498db', zIndex: '2' },
+  closeBtn: { position: 'absolute', top: '10px', right: '10px', backgroundColor: '#e74c3c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', padding: '2px 8px', zIndex: 10 },
+  scanBtn: { marginTop: '20px', width: window.innerWidth < 768 ? '90%' : 'auto', padding: '12px 60px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '1rem', fontWeight: 'bold' },
+  footerInfo: { marginTop: 'auto', padding: '20px' },
+  engineBadge: { border: '1px solid #27ae60', color: '#27ae60', padding: '5px 15px', borderRadius: '20px', fontSize: '0.7rem' },
   
-  resultPanel: { 
-    width: window.innerWidth < 768 ? '100%' : '380px', 
-    backgroundColor: '#161b22', 
-    borderLeft: window.innerWidth < 768 ? 'none' : '1px solid #30363d', 
-    borderTop: window.innerWidth < 768 ? '1px solid #30363d' : 'none',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column'
-  },
+  resultPanel: { width: window.innerWidth < 768 ? '100%' : '380px', backgroundColor: '#161b22', borderLeft: window.innerWidth < 768 ? 'none' : '1px solid #30363d', borderTop: window.innerWidth < 768 ? '1px solid #30363d' : 'none', padding: '20px', display: 'flex', flexDirection: 'column' },
   panelHeader: { fontSize: '1.1rem', marginBottom: '20px', fontWeight: 'bold' },
   gaugeContainer: { display: 'flex', justifyContent: 'center', marginBottom: '20px' },
-  insightBox: { backgroundColor: '#0d1117', padding: '15px', borderRadius: '12px', border: '1px solid #30363d' }
+  insightBox: { backgroundColor: '#0d1117', padding: '15px', borderRadius: '12px', border: '1px solid #30363d' },
+  infoBits: { marginTop: '20px' },
+  bit: { fontSize: '0.8rem', color: '#888', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }
 };
 
 export default App;
