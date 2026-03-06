@@ -31,6 +31,7 @@ function App() {
         motif: data.motif, 
         confidence: data.confidence, 
         img: preview,
+        time: new Date().toLocaleTimeString(), // Adds the scan time
         id: Date.now() 
       }, ...prev]);
     } catch (err) {
