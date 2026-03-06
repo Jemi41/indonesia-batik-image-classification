@@ -1,0 +1,4 @@
+batik_dataset/
+kaggle.json
+.ipynb_checkpoints/
+__pycache__/
